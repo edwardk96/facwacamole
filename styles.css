@@ -1,0 +1,30 @@
+/* Basic reset */
+body {
+    margin: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* The game grid (3x3) */
+  #game-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  /* Each hole - you can style however you want */
+  .hole {
+    width: 100px;
+    height: 100px;
+    background-color: #cccccc; /* Gray background for the holes */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 10px;
+  }
+  
+  /* Show mole (when 'active' class is set) */
+  .hole.active {
+    background-color: #ffcc00; /* Yellow color for the “mole” */
+  }
