@@ -74,3 +74,4 @@ startBtn.addEventListener('click', () => {
 // High score?
 // sound effects?
 // Difficulty levels?
+// lives if you miss?

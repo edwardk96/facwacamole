@@ -4,6 +4,16 @@ body {
     font-family: Arial, sans-serif;
   }
   
+  .arcade-font {
+    font-family: 'Press Start 2P', cursive; /* or monospace if you prefer */
+    font-size: 2em;
+    color: #5e2500; /* Example color; change as you like */
+    text-transform: uppercase; /* Ensures all letters look blocky and arcade-like */
+    margin: 20px 0;
+    /* Optionally, add a text shadow for extra retro flair */
+    text-shadow: 2px 2px 0 #da3908, 4px 4px 0 #f3ef0d;
+  }
+
   /* The game grid (3x3) */
   #game-grid {
     display: grid;
@@ -16,12 +26,12 @@ body {
   .hole {
     width: 100px;
     height: 100px;
-    background-color: #cccccc; /* Gray background for the holes */
+    background-color: #333333; /* Gray background for the holes */
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 50px;
   }
   
   /* Show mole (when 'active' class is set) */
