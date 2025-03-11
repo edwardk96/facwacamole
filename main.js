@@ -18,12 +18,23 @@ function showMole() {
   // Remove existing mole
   if (currentMoleIndex >= 0) {
     holes[currentMoleIndex].classList.remove('active');
+    holes[currentMoleIndex].querySelector('.mole').style.transform = 'translate(-50%, -50%)';
   }
 
   // Pick a new random hole
   const randomIndex = getRandomHoleIndex();
   currentMoleIndex = randomIndex;
   holes[randomIndex].classList.add('active');
+
+  // Generate a random angle from 0° to 359°
+  const randomAngle = Math.floor(Math.random() * 8) * 45;
+
+  // Grab the .mole within the current hole
+  const moleImg = holes[currentMoleIndex].querySelector('.mole');
+
+  // Apply the random rotation in addition to centering
+  moleImg.style.transform = `translate(-50%, -50%) rotate(${randomAngle}deg)`;
+
 }
 
 // Start game function

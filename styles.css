@@ -32,9 +32,40 @@ body {
     justify-content: center;
     cursor: pointer;
     border-radius: 50px;
+    position: relative;
+    overflow: hidden; /* if the image is bigger than the hole */
   }
   
   /* Show mole (when 'active' class is set) */
   .hole.active {
-    background-color: #ffcc00; /* Yellow color for the “mole” */
+    background-color: #5e5d5d; /* or keep it subtle, or remove entirely */
+  }
+  
+  /* Hide the <img> by default */
+  .mole {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    display: none;
+    width: 120%;
+    height: 120%;
+    object-fit: cover; /* or contain, depending on how you want it sized */
+    transition: transform 0.2s ease;
+  }
+  
+  /* When the hole is active, show the mole image */
+  .hole.active .mole {
+    display: block;
+    animation: popIn 0.2s ease;
+  }
+  
+  /* keyframes allows us to repeat the transition each time the mole appears */  
+  @keyframes popIn {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
