@@ -69,7 +69,6 @@ startBtn.addEventListener('click', () => {
   startGame();
 });
 
-// OPTIONAL: You might want to add a stop or “end game” feature after a certain time
 // setTimeout(() => {
 //   clearInterval(moleTimer);
 //   gameActive = false;
@@ -80,7 +79,6 @@ startBtn.addEventListener('click', () => {
 // edits: 
 // Change cursor to a hammer 
 // Make it feel like a 1980s video game
-// Add pictures of a mole 
 // Timer and countdown 
 // High score?
 // sound effects?
