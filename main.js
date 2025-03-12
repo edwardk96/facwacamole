@@ -5,7 +5,8 @@ const highScoreDisplay = document.getElementById("high-score");
 const startBtn = document.getElementById('startBtn');
 
 let score = 0;
-let highScore = localStorage.getItem("highScore") || 0; // Get saved high score or default to 0
+let highScore = parseInt(localStorage.getItem("highScore")) || 0;
+highScoreDisplay.textContent = highScore;
 let gameActive = false;
 let currentMoleIndex = -1;
 let moleTimer = null;
@@ -46,11 +47,14 @@ function startGame() {
   gameActive = true;
   score = 0;
   scoreDisplay.textContent = score;
-  highScoreDisplay.textContent = highScore;
+
+  clearInterval(moleTimer);
 
   // Show a new mole every second
   showMole(); // show first mole immediately
-  moleTimer = setInterval(showMole, 1000);
+  moleTimer = setInterval(showMole, 700);
+
+  setTimeout(endGame, 20000); // End game after 20 seconds
 }
 
 // Event listener for clicking holes
@@ -67,10 +71,12 @@ holes.forEach((hole, index) => {
   });
 });
 
+function updateHighScore() {
 if (score > highScore) {
   highScore = score;
-  highScoreDisplay.textContent = highScore;
   localStorage.setItem("highScore", highScore); // Save new high score
+  highScoreDisplay.textContent = highScore;
+}
 }
 
 // Event listener for start button
@@ -78,16 +84,16 @@ startBtn.addEventListener('click', () => {
   startGame();
 });
 
-// setTimeout(() => {
-//   clearInterval(moleTimer);
-//   gameActive = false;
-//   alert(`Game Over! Final Score: ${score}`);
-// }, 10000); // 10 seconds game duration
+function endGame() {
+  clearInterval(moleTimer);
+  updateHighScore();
+  gameActive = false;
+  alert(`Game Over! Final Score: ${score}`);
+}
 
 
 // edits: 
 // Change cursor to a hammer 
-// Make it feel like a 1980s video game
 // Timer and countdown 
 // High score?
 // sound effects?
