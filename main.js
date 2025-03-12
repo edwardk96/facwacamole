@@ -2,7 +2,11 @@
 const holes = document.querySelectorAll('.hole');
 const scoreDisplay = document.getElementById('score');
 const highScoreDisplay = document.getElementById("high-score");
-const startBtn = document.getElementById('startBtn');
+const easyBtn = document.getElementById('easyBtn');
+const mediumBtn = document.getElementById('mediumBtn');
+const hardBtn = document.getElementById('hardBtn');
+
+let moleInterval = 1000; // Default to Easy
 
 let score = 0;
 let highScore = parseInt(localStorage.getItem("highScore")) || 0;
@@ -41,19 +45,25 @@ function showMole() {
 }
 
 // Start game function
-function startGame() {
+function startGame(difficulty) {
   if (gameActive) return; // If already running, do nothing
 
   gameActive = true;
   score = 0;
   scoreDisplay.textContent = score;
 
-  clearInterval(moleTimer);
-
   // Show a new mole every second
+  if (difficulty === "easy") {
+    moleInterval = 1000; // 1s
+  } else if (difficulty === "medium") {
+    moleInterval = 800;  // 0.8s
+  } else if (difficulty === "hard") {
+    moleInterval = 600;  // 0.6s
+  }
+  
+  clearInterval(moleTimer);
   showMole(); // show first mole immediately
-  moleTimer = setInterval(showMole, 700);
-
+  moleTimer = setInterval(showMole, moleInterval); // Set mole timing
   setTimeout(endGame, 20000); // End game after 20 seconds
 }
 
@@ -80,9 +90,9 @@ if (score > highScore) {
 }
 
 // Event listener for start button
-startBtn.addEventListener('click', () => {
-  startGame();
-});
+easyBtn.addEventListener('click', () => startGame("easy"));
+mediumBtn.addEventListener('click', () => startGame("medium"));
+hardBtn.addEventListener('click', () => startGame("hard"));
 
 function endGame() {
   clearInterval(moleTimer);
@@ -95,7 +105,6 @@ function endGame() {
 // edits: 
 // Change cursor to a hammer 
 // Timer and countdown 
-// High score?
-// sound effects?
+// sound effects? can't touch this
 // Difficulty levels?
 // lives if you miss?
