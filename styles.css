@@ -10,22 +10,40 @@ body {
     background-position: top center;
   }
   
+  .game-container {
+    display: flex;
+    flex-direction: column;    /* stack items vertically */
+    align-items: center;       /* center items horizontally */
+    min-height: 100vh;         /* makes the container fill browser height (optional) */
+    box-sizing: border-box;
+    padding: 20px;             /* some padding so content isn’t flush to the edges */
+  }
+
   .arcade-font {
     font-family: 'Press Start 2P', cursive; /* or monospace if you prefer */
     font-size: 2em;
     color: #5e2500; /* Example color; change as you like */
     text-transform: uppercase; /* Ensures all letters look blocky and arcade-like */
-    margin: 20px 0;
-    /* Optionally, add a text shadow for extra retro flair */
+    margin: 40px 0 0 0;
     text-shadow: 2px 2px 0 #da3908, 4px 4px 0 #f3ef0d;
   }
+
+  .scores{
+    display: flex;
+    align-items: center;    /* vertically center the items (optional) */
+    gap: 20px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px; /* Adjust for readability */
+    color: hsl(0, 0%, 100%);
+    text-shadow: 2px 2px 0 #000000
+}
 
   /* The game grid (3x3) */
   #game-grid {
     display: grid;
     grid-template-columns: repeat(3, 100px);
     grid-gap: 10px;
-    margin-bottom: 20px;
+    margin: 70px 20px 40px 20px;
   }
   
   /* Each hole - you can style however you want */

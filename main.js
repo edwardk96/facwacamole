@@ -1,9 +1,11 @@
 // Select elements
 const holes = document.querySelectorAll('.hole');
 const scoreDisplay = document.getElementById('score');
+const highScoreDisplay = document.getElementById("high-score");
 const startBtn = document.getElementById('startBtn');
 
 let score = 0;
+let highScore = localStorage.getItem("highScore") || 0; // Get saved high score or default to 0
 let gameActive = false;
 let currentMoleIndex = -1;
 let moleTimer = null;
@@ -44,6 +46,7 @@ function startGame() {
   gameActive = true;
   score = 0;
   scoreDisplay.textContent = score;
+  highScoreDisplay.textContent = highScore;
 
   // Show a new mole every second
   showMole(); // show first mole immediately
@@ -63,6 +66,12 @@ holes.forEach((hole, index) => {
     }
   });
 });
+
+if (score > highScore) {
+  highScore = score;
+  highScoreDisplay.textContent = highScore;
+  localStorage.setItem("highScore", highScore); // Save new high score
+}
 
 // Event listener for start button
 startBtn.addEventListener('click', () => {

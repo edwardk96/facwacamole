@@ -7,8 +7,13 @@
   <link rel="stylesheet"href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"/>
 </head>
 <body>
-  <h1 class="arcade-font">WHAC-A-MOLE</h1>
-  <div id="game-grid">
+    <div class="game-container">
+    <h1 class="arcade-font">WHAC-A-MOLE</h1>
+    <div class = "scores">
+        <p>Score:<span id="score">0</span></p>
+        <p>High score:<span id="high-score">0</span></p>
+    </div>
+    <div id="game-grid">
     <!-- Each hole will be a div -->
     <div class="hole" id="hole-0">
         <img src="images/cartoon-mole.png" alt="Mole" class="mole" />
@@ -38,9 +43,8 @@
         <img src="images/cartoon-mole.png" alt="Mole" class="mole" />
     </div>
   </div>
-
-  <p>Score: <span id="score">0</span></p>
   <button id="startBtn">Start Game</button>
+</div>
 
   <script src="main.js"></script>
 </body>
