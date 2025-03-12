@@ -59,6 +59,10 @@ function startGame(difficulty) {
     moleInterval = 800;  // 0.8s
   } else if (difficulty === "hard") {
     moleInterval = 600;  // 0.6s
+    hardModeAudio.currentTime = 0; // Restart the song if it was playing
+    hardModeAudio.play(); // Start playing the song
+    hardModeAudio.volume = 0.8; // Set volume (optional)
+    hardModeAudio.play().catch(error => console.log("Autoplay blocked:", error));
   }
   
   clearInterval(moleTimer);
@@ -89,17 +93,18 @@ if (score > highScore) {
 }
 }
 
-// Event listener for start button
-easyBtn.addEventListener('click', () => startGame("easy"));
-mediumBtn.addEventListener('click', () => startGame("medium"));
-hardBtn.addEventListener('click', () => startGame("hard"));
-
 function endGame() {
   clearInterval(moleTimer);
   updateHighScore();
   gameActive = false;
+  hardModeAudio.pause(); // Stop the song when the game ends
   alert(`Game Over! Final Score: ${score}`);
 }
+
+// Event listener for start button
+easyBtn.addEventListener('click', () => startGame("easy"));
+mediumBtn.addEventListener('click', () => startGame("medium"));
+hardBtn.addEventListener('click', () => startGame("hard"));
 
 
 // edits: 
@@ -107,4 +112,5 @@ function endGame() {
 // Timer and countdown 
 // sound effects? can't touch this
 // Difficulty levels?
+// mole shouldn't appear at the end
 // lives if you miss?
