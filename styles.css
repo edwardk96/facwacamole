@@ -84,6 +84,40 @@ body {
     animation: popIn 0.2s ease;
   }
   
+  .difficulty-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  /* Button styling */
+  button {
+    font-family: 'Press Start 2P', cursive; /* Arcade font */
+    font-size: 14px;
+    padding: 10px 20px;
+    background: none; /* Remove background */
+    border: none; /* Remove borders */
+    color: #fff; /* White text */
+    cursor: pointer;
+    position: relative; /* For hover effect */
+    transition: color 0.2s ease-in-out;
+  }
+  
+  /* Button hover effect */
+  button:hover {
+    color: #ffffff; /* Change text color on hover */
+    text-decoration: underline; /* Underline text */
+  }
+  
+  /* Add a triangle/arrow on hover */
+  button:hover::before {
+    content: "▶ "; /* Unicode triangle */
+    position: absolute;
+    left: -5px; /* Position the arrow to the left of text */
+    color: #ffffff; /* Match hover color */
+  }
+
   /* keyframes allows us to repeat the transition each time the mole appears */  
   @keyframes popIn {
     0% {
