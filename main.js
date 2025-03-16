@@ -1,4 +1,4 @@
-// Select elements
+// Select defined elements
 const holes = document.querySelectorAll('.hole');
 const scoreDisplay = document.getElementById('score');
 const highScoreDisplay = document.getElementById("high-score");
@@ -8,12 +8,13 @@ const hardBtn = document.getElementById('hardBtn');
 const buttonsContainer = document.querySelector('.difficulty-buttons');
 const hardModeAudio = document.getElementById('hardModeAudio');
 
-let selectedDifficulty = "easy"; // Default
+let selectedDifficulty = "easy"; // Default difficulty mode
 let gameTimer;
 
 let score = 0;
 let highScore = parseInt(localStorage.getItem("highScore")) || 0;
 highScoreDisplay.textContent = highScore;
+
 let gameActive = false;
 let currentMoleIndex = -1;
 let moleTimer = null;
@@ -36,15 +37,16 @@ function showMole() {
   currentMoleIndex = randomIndex;
   holes[randomIndex].classList.add('active');
 
-  // Generate a random angle from 0° to 359°
+  // Generate a random angle in 45 degree increments
   const randomAngle = Math.floor(Math.random() * 8) * 45;
 
-  // Grab the .mole within the current hole
+  // Grab the mole image within the current hole
   const moleImg = holes[currentMoleIndex].querySelector('.mole');
 
   // Apply the random rotation in addition to centering
   moleImg.style.transform = `translate(-50%, -50%) rotate(${randomAngle}deg)`;
 
+  // Increment the player's score for each successful click 
   moleImg.onclick = () => {
     if (gameActive) {
       score++;
@@ -58,40 +60,43 @@ function showMole() {
 
 }
 
-function selectDifficulty(difficulty) {
+function selectDifficulty(difficulty, clickedButton) {
   selectedDifficulty = difficulty;
-  
-  let selectedButton;
+
+  // Set mole speed based on difficulty
   if (difficulty === "easy") {
     moleInterval = 1000;
-    selectedButton = easyBtn;
   } else if (difficulty === "medium") {
     moleInterval = 800;
-    selectedButton = mediumBtn;
   } else if (difficulty === "hard") {
     moleInterval = 600;
-    selectedButton = hardBtn;
-  
-    hardModeAudio.currentTime = 0; // Restart the song if it was playing
-    hardModeAudio.play(); // Start playing the song
+    hardModeAudio.currentTime = 0;
+    hardModeAudio.play();
   }
 
-  // Blink the selected button 3 times
-  selectedButton.classList.add('blinking');
+  // Blink the clicked button
+  clickedButton.classList.add('blinking');
 
-  // After the blinking ends, hide buttons and start countdown
+  // After blinking, hide buttons and start countdown
   setTimeout(() => {
-    buttonsContainer.innerHTML = '<p id="countdown-text">READY</p>'; // Ensure this replaces buttons properly
-    startCountdown(); // Begin "Ready, Set, Go" sequence
-  }, 600); // 3 blinks (0.2s each)
+    clickedButton.classList.remove('blinking');
+    
+    buttonsContainer.style.display = 'none';
+
+    // Create countdown text
+    const countdownText = document.createElement('p');
+    countdownText.id = 'countdown-text';
+    buttonsContainer.parentNode.appendChild(countdownText);
+
+    startCountdown(countdownText);
+  }, 600);
 }
 
-function startCountdown() {
+function startCountdown(countdownText) {
   let countdownSequence = ["READY", "SET", "GO!"];
   let index = 0;
 
-  buttonsContainer.innerHTML = '<p id="countdown-text">READY</p>';
-  const countdownText = document.getElementById('countdown-text'); // Select after inserting
+  countdownText.textContent = countdownSequence[index];
 
   let countdownInterval = setInterval(() => {
     index++;
@@ -99,7 +104,7 @@ function startCountdown() {
       countdownText.textContent = countdownSequence[index];
     } else {
       clearInterval(countdownInterval);
-      startGame(countdownText, selectedDifficulty); // Start game after "GO"
+      startGame(countdownText, selectedDifficulty); // Start game after "GO!"
     }
   }, 1000);
 }
@@ -153,13 +158,18 @@ function endGame() {
     hardModeAudio.pause();
   }
   
+
+  // Show difficulty buttons again
+  buttonsContainer.style.display = 'block'; // Show buttons again
+  document.getElementById('countdown-text')?.remove(); // Remove countdown text
+
   alert(`Game Over! Final Score: ${score}`);
 }
 
 // Event listener for start button
-easyBtn.addEventListener('click', () => selectDifficulty("easy"));
-mediumBtn.addEventListener('click', () => selectDifficulty("medium"));
-hardBtn.addEventListener('click', () => selectDifficulty("hard"));
+easyBtn.addEventListener('click', (e) => selectDifficulty("easy", e.target));
+mediumBtn.addEventListener('click', (e) => selectDifficulty("medium", e.target));
+hardBtn.addEventListener('click', (e) => selectDifficulty("hard", e.target));
 
 // edits: 
 // Change cursor to a hammer 
