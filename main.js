@@ -5,8 +5,11 @@ const highScoreDisplay = document.getElementById("high-score");
 const easyBtn = document.getElementById('easyBtn');
 const mediumBtn = document.getElementById('mediumBtn');
 const hardBtn = document.getElementById('hardBtn');
+const buttonsContainer = document.querySelector('.difficulty-buttons');
+const hardModeAudio = document.getElementById('hardModeAudio');
 
-let moleInterval = 1000; // Default to Easy
+let selectedDifficulty = "easy"; // Default
+let gameTimer;
 
 let score = 0;
 let highScore = parseInt(localStorage.getItem("highScore")) || 0;
@@ -42,48 +45,96 @@ function showMole() {
   // Apply the random rotation in addition to centering
   moleImg.style.transform = `translate(-50%, -50%) rotate(${randomAngle}deg)`;
 
+  moleImg.onclick = () => {
+    if (gameActive) {
+      score++;
+      scoreDisplay.textContent = score;
+
+      // Hide the mole immediately after a successful whack
+      holes[currentMoleIndex].classList.remove('active');
+      currentMoleIndex = -1;
+    }
+  };
+
 }
 
-// Start game function
-function startGame(difficulty) {
-  if (gameActive) return; // If already running, do nothing
+function selectDifficulty(difficulty) {
+  selectedDifficulty = difficulty;
+  
+  let selectedButton;
+  if (difficulty === "easy") {
+    moleInterval = 1000;
+    selectedButton = easyBtn;
+  } else if (difficulty === "medium") {
+    moleInterval = 800;
+    selectedButton = mediumBtn;
+  } else if (difficulty === "hard") {
+    moleInterval = 600;
+    selectedButton = hardBtn;
+  
+    hardModeAudio.currentTime = 0; // Restart the song if it was playing
+    hardModeAudio.play(); // Start playing the song
+  }
 
+  // Blink the selected button 3 times
+  selectedButton.classList.add('blinking');
+
+  // After the blinking ends, hide buttons and start countdown
+  setTimeout(() => {
+    buttonsContainer.innerHTML = '<p id="countdown-text">READY</p>'; // Ensure this replaces buttons properly
+    startCountdown(); // Begin "Ready, Set, Go" sequence
+  }, 600); // 3 blinks (0.2s each)
+}
+
+function startCountdown() {
+  let countdownSequence = ["READY", "SET", "GO!"];
+  let index = 0;
+
+  buttonsContainer.innerHTML = '<p id="countdown-text">READY</p>';
+  const countdownText = document.getElementById('countdown-text'); // Select after inserting
+
+  let countdownInterval = setInterval(() => {
+    index++;
+    if (index < countdownSequence.length) {
+      countdownText.textContent = countdownSequence[index];
+    } else {
+      clearInterval(countdownInterval);
+      startGame(countdownText, selectedDifficulty); // Start game after "GO"
+    }
+  }, 1000);
+}
+
+// Function to start game & timer after "Go"
+function startGame(countdownText, difficulty) {
   gameActive = true;
   score = 0;
   scoreDisplay.textContent = score;
 
-  // Show a new mole every second
-  if (difficulty === "easy") {
-    moleInterval = 1000; // 1s
-  } else if (difficulty === "medium") {
-    moleInterval = 800;  // 0.8s
-  } else if (difficulty === "hard") {
-    moleInterval = 600;  // 0.6s
-    hardModeAudio.currentTime = 0; // Restart the song if it was playing
-    hardModeAudio.play(); // Start playing the song
-    hardModeAudio.volume = 0.8; // Set volume (optional)
-    hardModeAudio.play().catch(error => console.log("Autoplay blocked:", error));
-  }
-  
-  clearInterval(moleTimer);
-  showMole(); // show first mole immediately
-  moleTimer = setInterval(showMole, moleInterval); // Set mole timing
-  setTimeout(endGame, 20000); // End game after 20 seconds
-}
+  let timeLeft = 20; // Game duration
+  countdownText.textContent = `Time Left: ${timeLeft}`;
 
-// Event listener for clicking holes
-holes.forEach((hole, index) => {
-  hole.addEventListener('click', () => {
-    // If the clicked hole is the current mole
-    if (index === currentMoleIndex && gameActive) {
-      score++;
-      scoreDisplay.textContent = score;
-      // Hide the mole immediately after a successful whack
-      hole.classList.remove('active');
-      currentMoleIndex = -1;
+  gameTimer = setInterval(() => {
+    timeLeft--;
+    countdownText.textContent = `Time Left: ${timeLeft}`;
+    if (timeLeft <= 0) {
+      clearInterval(gameTimer);
+      endGame();
     }
-  });
-});
+  }, 1000);
+
+  // Set mole interval based on difficulty
+  if (difficulty === "easy") {
+    moleInterval = 1000;
+  } else if (difficulty === "medium") {
+    moleInterval = 800;
+  } else if (difficulty === "hard") {
+    moleInterval = 600;
+  }
+
+  clearInterval(moleTimer);
+  showMole();
+  moleTimer = setInterval(showMole, moleInterval);
+}
 
 function updateHighScore() {
 if (score > highScore) {
@@ -97,20 +148,23 @@ function endGame() {
   clearInterval(moleTimer);
   updateHighScore();
   gameActive = false;
-  hardModeAudio.pause(); // Stop the song when the game ends
+  
+  if (hardModeAudio) {
+    hardModeAudio.pause();
+  }
+  
   alert(`Game Over! Final Score: ${score}`);
 }
 
 // Event listener for start button
-easyBtn.addEventListener('click', () => startGame("easy"));
-mediumBtn.addEventListener('click', () => startGame("medium"));
-hardBtn.addEventListener('click', () => startGame("hard"));
-
+easyBtn.addEventListener('click', () => selectDifficulty("easy"));
+mediumBtn.addEventListener('click', () => selectDifficulty("medium"));
+hardBtn.addEventListener('click', () => selectDifficulty("hard"));
 
 // edits: 
 // Change cursor to a hammer 
-// Timer and countdown 
+// Difficuty buttons reappear after game finished  
 // sound effects? can't touch this
-// Difficulty levels?
 // mole shouldn't appear at the end
+// clean up code and comments 
 // lives if you miss?
