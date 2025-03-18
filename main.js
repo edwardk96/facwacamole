@@ -19,6 +19,26 @@ let gameActive = false;
 let currentMoleIndex = -1;
 let moleTimer = null;
 
+let youtubePlayer;
+
+// Load YouTube API
+function onYouTubeIframeAPIReady() {
+  youtubePlayer = new YT.Player('youtubePlayer', {
+    events: {
+      'onReady': (event) => {
+        event.target.setVolume(100); // Set volume (optional)
+      }
+    }
+  });
+}
+
+// Play YouTube Audio
+function playYouTubeAudio() {
+  if (youtubePlayer) {
+    youtubePlayer.playVideo();
+  }
+}
+
 // Helper to pick random hole
 function getRandomHoleIndex() {
   return Math.floor(Math.random() * holes.length);
@@ -70,8 +90,7 @@ function selectDifficulty(difficulty, clickedButton) {
     moleInterval = 800;
   } else if (difficulty === "hard") {
     moleInterval = 600;
-    hardModeAudio.currentTime = 0;
-    hardModeAudio.play();
+    playYouTubeAudio();
   }
 
   // Blink the clicked button
@@ -80,7 +99,7 @@ function selectDifficulty(difficulty, clickedButton) {
   // After blinking, hide buttons and start countdown
   setTimeout(() => {
     clickedButton.classList.remove('blinking');
-    
+
     buttonsContainer.style.display = 'none';
 
     // Create countdown text
@@ -154,8 +173,8 @@ function endGame() {
   updateHighScore();
   gameActive = false;
   
-  if (hardModeAudio) {
-    hardModeAudio.pause();
+  if (youtubePlayer) {
+    youtubePlayer.pauseVideo();
   }
   
 
@@ -173,8 +192,6 @@ hardBtn.addEventListener('click', (e) => selectDifficulty("hard", e.target));
 
 // edits: 
 // Change cursor to a hammer 
-// Difficuty buttons reappear after game finished  
 // sound effects? can't touch this
 // mole shouldn't appear at the end
-// clean up code and comments 
-// lives if you miss?
+// clean up code and comments
