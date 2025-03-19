@@ -6,7 +6,6 @@ const easyBtn = document.getElementById('easyBtn');
 const mediumBtn = document.getElementById('mediumBtn');
 const hardBtn = document.getElementById('hardBtn');
 const buttonsContainer = document.querySelector('.difficulty-buttons');
-const hardModeAudio = document.getElementById('hardModeAudio');
 
 let selectedDifficulty = "easy"; // Default difficulty mode
 let gameTimer;
@@ -21,22 +20,8 @@ let moleTimer = null;
 
 let youtubePlayer;
 
-// Load YouTube API
 function onYouTubeIframeAPIReady() {
-  youtubePlayer = new YT.Player('youtubePlayer', {
-    events: {
-      'onReady': (event) => {
-        event.target.setVolume(100); // Set volume (optional)
-      }
-    }
-  });
-}
-
-// Play YouTube Audio
-function playYouTubeAudio() {
-  if (youtubePlayer) {
-    youtubePlayer.playVideo();
-  }
+  youtubePlayer = new YT.Player('youtubePlayer');
 }
 
 // Helper to pick random hole
@@ -90,7 +75,7 @@ function selectDifficulty(difficulty, clickedButton) {
     moleInterval = 800;
   } else if (difficulty === "hard") {
     moleInterval = 600;
-    playYouTubeAudio();
+    youtubePlayer.playVideo();
   }
 
   // Blink the clicked button
@@ -146,15 +131,6 @@ function startGame(countdownText, difficulty) {
     }
   }, 1000);
 
-  // Set mole interval based on difficulty
-  if (difficulty === "easy") {
-    moleInterval = 1000;
-  } else if (difficulty === "medium") {
-    moleInterval = 800;
-  } else if (difficulty === "hard") {
-    moleInterval = 600;
-  }
-
   clearInterval(moleTimer);
   showMole();
   moleTimer = setInterval(showMole, moleInterval);
@@ -177,7 +153,6 @@ function endGame() {
     youtubePlayer.pauseVideo();
   }
   
-
   // Show difficulty buttons again
   buttonsContainer.style.display = 'block'; // Show buttons again
   document.getElementById('countdown-text')?.remove(); // Remove countdown text
