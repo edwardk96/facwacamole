@@ -20,8 +20,15 @@ let moleTimer = null;
 
 let youtubePlayer;
 
-function onYouTubeIframeAPIReady() {
-  youtubePlayer = new YT.Player('youtubePlayer');
+const hardModeAudio = document.getElementById('hardModeAudio');
+
+function tryToPlay() {
+  if (hardModeAudio) {
+    hardModeAudio.currentTime = 20; // Start from beginning
+    hardModeAudio.play()
+      .then(() => console.log("🎵 MP3 is playing!"))
+      .catch((err) => console.warn("🔇 Could not play audio:", err));
+  }
 }
 
 // Helper to pick random hole
@@ -75,7 +82,6 @@ function selectDifficulty(difficulty, clickedButton) {
     moleInterval = 800;
   } else if (difficulty === "hard") {
     moleInterval = 600;
-    youtubePlayer.playVideo();
   }
 
   // Blink the clicked button
@@ -149,8 +155,9 @@ function endGame() {
   updateHighScore();
   gameActive = false;
   
-  if (youtubePlayer) {
-    youtubePlayer.pauseVideo();
+  if (hardModeAudio) {
+    hardModeAudio.pause();
+    hardModeAudio.currentTime = 0;
   }
   
   // Show difficulty buttons again
@@ -163,7 +170,10 @@ function endGame() {
 // Event listener for start button
 easyBtn.addEventListener('click', (e) => selectDifficulty("easy", e.target));
 mediumBtn.addEventListener('click', (e) => selectDifficulty("medium", e.target));
-hardBtn.addEventListener('click', (e) => selectDifficulty("hard", e.target));
+hardBtn.addEventListener('click', (e) => {
+  selectDifficulty("hard", e.target);
+  tryToPlay(); // 👈 This is a direct user interaction
+});
 
 // edits: 
 // Change cursor to a hammer 
