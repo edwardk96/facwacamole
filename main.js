@@ -2,9 +2,6 @@
 const holes = document.querySelectorAll('.hole');
 const scoreDisplay = document.getElementById('score');
 const highScoreDisplay = document.getElementById("high-score");
-const easyBtn = document.getElementById('easyBtn');
-const mediumBtn = document.getElementById('mediumBtn');
-const hardBtn = document.getElementById('hardBtn');
 const buttonsContainer = document.querySelector('.difficulty-buttons');
 
 let selectedDifficulty = "easy"; // Default difficulty mode
@@ -18,16 +15,27 @@ let gameActive = false;
 let currentMoleIndex = -1;
 let moleTimer = null;
 
-let youtubePlayer;
-
 const hardModeAudio = document.getElementById('hardModeAudio');
+const warningBanner = document.getElementById('audio-warning');
 
 function tryToPlay() {
+  
   if (hardModeAudio) {
-    hardModeAudio.currentTime = 20; // Start from beginning
+    hardModeAudio.volume = 0.4;
+    hardModeAudio.currentTime = 20;
     hardModeAudio.play()
-      .then(() => console.log("🎵 MP3 is playing!"))
-      .catch((err) => console.warn("🔇 Could not play audio:", err));
+      .then(() => {
+        console.log("🎵 MP3 is playing at 40% volume");
+      })
+      .catch((err) => {
+        console.warn("🔇 Audio play failed:", err);
+        if (warningBanner) {
+          warningBanner.classList.add("show");
+          setTimeout(() => {
+            warningBanner.classList.remove("show");
+          }, 5000);
+        }
+      });
   }
 }
 
@@ -40,7 +48,7 @@ function getRandomHoleIndex() {
 function showMole() {
   // Remove existing mole
   if (currentMoleIndex >= 0) {
-    holes[currentMoleIndex].classList.remove('active');
+    holes[currentMoleIndex].classList.remove('active', 'disco');
     holes[currentMoleIndex].querySelector('.mole').style.transform = 'translate(-50%, -50%)';
   }
 
@@ -48,6 +56,10 @@ function showMole() {
   const randomIndex = getRandomHoleIndex();
   currentMoleIndex = randomIndex;
   holes[randomIndex].classList.add('active');
+
+  if (selectedDifficulty === "hard") {
+    holes[randomIndex].classList.add('disco');
+  }
 
   // Generate a random angle in 45 degree increments
   const randomAngle = Math.floor(Math.random() * 8) * 45;
@@ -65,7 +77,7 @@ function showMole() {
       scoreDisplay.textContent = score;
 
       // Hide the mole immediately after a successful whack
-      holes[currentMoleIndex].classList.remove('active');
+      holes[currentMoleIndex].classList.remove('active', 'disco');
       currentMoleIndex = -1;
     }
   };
@@ -116,11 +128,12 @@ function startCountdown(countdownText) {
       clearInterval(countdownInterval);
       startGame(countdownText, selectedDifficulty); // Start game after "GO!"
     }
-  }, 1000);
+  }, 800);
 }
 
 // Function to start game & timer after "Go"
 function startGame(countdownText, difficulty) {
+  if (difficulty === "hard") tryToPlay();
   gameActive = true;
   score = 0;
   scoreDisplay.textContent = score;
@@ -155,6 +168,12 @@ function endGame() {
   updateHighScore();
   gameActive = false;
   
+  if (currentMoleIndex >= 0) {
+    const currentHole = holes[currentMoleIndex];
+    currentHole.classList.remove('active', 'disco');
+    currentMoleIndex = -1;
+  }
+
   if (hardModeAudio) {
     hardModeAudio.pause();
     hardModeAudio.currentTime = 0;
@@ -170,13 +189,10 @@ function endGame() {
 // Event listener for start button
 easyBtn.addEventListener('click', (e) => selectDifficulty("easy", e.target));
 mediumBtn.addEventListener('click', (e) => selectDifficulty("medium", e.target));
-hardBtn.addEventListener('click', (e) => {
-  selectDifficulty("hard", e.target);
-  tryToPlay(); // 👈 This is a direct user interaction
-});
+hardBtn.addEventListener('click', (e) => selectDifficulty("hard", e.target));
 
 // edits: 
-// Change cursor to a hammer 
-// sound effects? can't touch this
+// Change cursor to a hammer
 // mole shouldn't appear at the end
+// warn if speaker muted 
 // clean up code and comments
