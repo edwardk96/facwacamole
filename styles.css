@@ -165,15 +165,14 @@ body {
     top: -60px; /* Hidden offscreen initially */
     left: 0;
     width: 100%;
-    background-color: #ff004c;
-    color: white;
+    background-color: #ffffff;
+    color: rgb(228, 3, 89);
     text-align: center;
     font-family: 'Press Start 2P', cursive;
-    font-size: 0.75rem;
-    padding: 1rem 0;
+    font-size: 0.65rem;
+    padding: 0.5rem 0;
     z-index: 1000;
     transition: top 0.5s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
   #audio-warning.show {
     top: 0;

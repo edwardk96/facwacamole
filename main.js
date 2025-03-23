@@ -22,22 +22,18 @@ function tryToPlay() {
   
   if (hardModeAudio) {
     hardModeAudio.volume = 0.4;
-    hardModeAudio.currentTime = 20;
+    hardModeAudio.currentTime = 19;
     hardModeAudio.play()
-      .then(() => {
-        console.log("🎵 MP3 is playing at 40% volume");
-      })
-      .catch((err) => {
-        console.warn("🔇 Audio play failed:", err);
-        if (warningBanner) {
-          warningBanner.classList.add("show");
-          setTimeout(() => {
-            warningBanner.classList.remove("show");
-          }, 5000);
-        }
-      });
-  }
+  }  
 }
+
+hardBtn.addEventListener('mouseenter', () => {
+  warningBanner.classList.add('show');
+});
+
+hardBtn.addEventListener('mouseleave', () => {
+  warningBanner.classList.remove('show');
+});
 
 // Helper to pick random hole
 function getRandomHoleIndex() {
@@ -193,6 +189,4 @@ hardBtn.addEventListener('click', (e) => selectDifficulty("hard", e.target));
 
 // edits: 
 // Change cursor to a hammer
-// mole shouldn't appear at the end
-// warn if speaker muted 
 // clean up code and comments
