@@ -1,44 +1,45 @@
-/* Basic reset */
 body {
     margin: 20px;
-    font-family: Arial, sans-serif;
+    font-family: Arial, sans-serif; /* default font family */
     margin: 0;
     padding: 0;
-    /* Replace 'background.jpg' with the path to your image */
-    background: url('images/background.jpg');
+    background: url('images/background.jpg'); /* background image, not repeated */
     background-repeat:no-repeat;
     background-position: top center;
   }
   
+  /* Flexbox to contain the game */
   .game-container {
     display: flex;
-    flex-direction: column;    /* stack items vertically */
-    align-items: center;       /* center items horizontally */
-    min-height: 100vh;         /* makes the container fill browser height (optional) */
+    flex-direction: column;    
+    align-items: center;
+    min-height: 100vh;         
     box-sizing: border-box;
-    padding: 20px;             /* some padding so content isn’t flush to the edges */
+    padding: 20px;             
   }
 
+  /* styling to make the title font look like a 1980s arcade */
   .arcade-font {
-    font-family: 'Press Start 2P', cursive; /* or monospace if you prefer */
+    font-family: 'Press Start 2P', cursive;
     font-size: 2em;
-    color: #5e2500; /* Example color; change as you like */
-    text-transform: uppercase; /* Ensures all letters look blocky and arcade-like */
+    color: #5e2500; 
+    text-transform: uppercase;
     margin: 40px 0 20px 0;
     text-shadow: 2px 2px 0 #da3908, 4px 4px 0 #f3ef0d;
   }
 
+  /* styling to make the scores font look like a 1980s arcade */
   .scores{
     display: flex;
-    align-items: center;    /* vertically center the items (optional) */
+    align-items: center; 
     gap: 20px;
     font-family: 'Press Start 2P', cursive;
-    font-size: 12px; /* Adjust for readability */
+    font-size: 0.75em;
     color: hsl(0, 0%, 100%);
     text-shadow: 2px 2px 0 #000000
 }
 
-  /* The game grid (3x3) */
+  /* A 3x3 game grid to contain the holes */
   #game-grid {
     display: grid;
     grid-template-columns: repeat(3, 100px);
@@ -46,35 +47,35 @@ body {
     margin: 50px 20px 20px 20px;
   }
   
-  /* Each hole - you can style however you want */
+  /* Styling for each hole */
   .hole {
     width: 100px;
     height: 100px;
-    background-color: #333333; /* Gray background for the holes */
+    background-color: #333333;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     border-radius: 50px;
     position: relative;
-    overflow: hidden; /* if the image is bigger than the hole */
+    overflow: hidden; /* hide excess parts of the image within the hole */
   }
   
-  /* Show mole (when 'active' class is set) */
+  /* Change the hole colour slightly when 'active' class is set */
   .hole.active {
-    background-color: #5e5d5d; /* or keep it subtle, or remove entirely */
+    background-color: #5e5d5d;
   }
   
-  /* Hide the <img> by default */
+  /* Styling for the mole image within each hole */
   .mole {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -40%);
-    display: none;
+    display: none;  /* Hide the mole image by default */
     width: 120%;
     height: 120%;
-    object-fit: cover; /* or contain, depending on how you want it sized */
+    object-fit: cover;
     transition: transform 0.2s ease;
   }
   
@@ -84,6 +85,7 @@ body {
     animation: popIn 0.2s ease;
   }
   
+  /* container for the difficulty buttons */
   .difficulty-buttons {
     display: flex;
     justify-content: center;
@@ -98,26 +100,23 @@ body {
     padding: 10px 20px;
     background: none; /* Remove background */
     border: none; /* Remove borders */
-    color: #fff; /* White text */
+    color: #fff; 
     cursor: pointer;
     position: relative; /* For hover effect */
     transition: color 0.2s ease-in-out;
   }
   
-  /* Button hover effect */
-  button:hover {
-    color: #ffffff; /* Change text color on hover */
-  }
-  
-  /* Add a triangle/arrow on hover */
+  /* Add an arrow next to the difficulty button on hover */
   button:hover::before {
-    content: "▶ "; /* Unicode triangle */
+    content: "▶ ";
     position: absolute;
-    left: -1px; /* Position the arrow to the left of text */
-    color: #ffffff; /* Match hover color */
+    left: -0.5px; /* Position the arrow to the left of text */
+    color: #ffffff;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
-  /* keyframes allows us to repeat the transition each time the mole appears */  
+  /* keyframes allow us to repeat various transitions each time the mole appears or a button is clicked, rather than just once when the DOM is loaded */  
   @keyframes popIn {
     0% {
       transform: scale(0);
@@ -127,17 +126,13 @@ body {
     }
   }
 
+  /* Blink selected button 3 times */
+  .blinking {
+    animation: blink 0.2s step-end 3; 
+  }
+
   @keyframes blink {
     50% { opacity: 0; }
-  }
-  
-  .blinking {
-    animation: blink 0.2s step-end 3; /* Blinks 3 times */
-  }
-  
-  /* Hide elements */
-  .hidden {
-    display: none;
   }
   
   /* Countdown text */
@@ -147,6 +142,11 @@ body {
     text-align: center;
     color: #fff;
   }
+  
+  /* Disco flash on Hard mode */
+  .hole.disco {
+    animation: discoFlash 0.6s linear infinite;
+  }
 
   @keyframes discoFlash {
     0%   { background-color: #ff00ff; }
@@ -155,14 +155,12 @@ body {
     75%  { background-color: #ff6600; }
     100% { background-color: #ff00ff; }
   }
-  
-  .hole.disco {
-    animation: discoFlash 0.6s linear infinite;
-  }
 
+
+  /* styling for audio warning, to be hidden offscreen initially */
   #audio-warning {
     position: fixed;
-    top: -60px; /* Hidden offscreen initially */
+    top: -60px;
     left: 0;
     width: 100%;
     background-color: #ffffff;
