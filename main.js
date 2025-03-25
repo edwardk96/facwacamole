@@ -1,11 +1,13 @@
-// Select defined elements
+// Defined DOM elements
 const holes = document.querySelectorAll('.hole');
 const scoreDisplay = document.getElementById('score');
 const highScoreDisplay = document.getElementById("high-score");
 const buttonsContainer = document.querySelector('.difficulty-buttons');
+const hardModeAudio = document.getElementById('hardModeAudio');
+const warningBanner = document.getElementById('audio-warning');
 
-let selectedDifficulty = "easy"; // Default difficulty mode
-let gameTimer;
+// Declare global variables and set default values 
+let selectedDifficulty = "easy";
 
 let score = 0;
 let highScore = parseInt(localStorage.getItem("highScore")) || 0;
@@ -15,9 +17,7 @@ let gameActive = false;
 let currentMoleIndex = -1;
 let moleTimer = null;
 
-const hardModeAudio = document.getElementById('hardModeAudio');
-const warningBanner = document.getElementById('audio-warning');
-
+// function used to play music in hard mode 
 function tryToPlay() {
   
   if (hardModeAudio) {
@@ -27,6 +27,7 @@ function tryToPlay() {
   }  
 }
 
+// Show audio warning when hovering over the hard mode button 
 hardBtn.addEventListener('mouseenter', () => {
   warningBanner.classList.add('show');
 });
@@ -35,6 +36,7 @@ hardBtn.addEventListener('mouseleave', () => {
   warningBanner.classList.remove('show');
 });
 
+// Core game mechanics 
 // Helper to pick random hole
 function getRandomHoleIndex() {
   return Math.floor(Math.random() * holes.length);
@@ -80,6 +82,7 @@ function showMole() {
 
 }
 
+// Start game workflow 
 function selectDifficulty(difficulty, clickedButton) {
   selectedDifficulty = difficulty;
 
@@ -106,7 +109,7 @@ function selectDifficulty(difficulty, clickedButton) {
     countdownText.id = 'countdown-text';
     buttonsContainer.parentNode.appendChild(countdownText);
 
-    startCountdown(countdownText);
+    startCountdown(countdownText);  // Fine to call function defined below as JS will hoist functions to the top of their scope 
   }, 600);
 }
 
@@ -137,7 +140,7 @@ function startGame(countdownText, difficulty) {
   let timeLeft = 20; // Game duration
   countdownText.textContent = `Time Left: ${timeLeft}`;
 
-  gameTimer = setInterval(() => {
+  let gameTimer = setInterval(() => {
     timeLeft--;
     countdownText.textContent = `Time Left: ${timeLeft}`;
     if (timeLeft <= 0) {
@@ -186,7 +189,3 @@ function endGame() {
 easyBtn.addEventListener('click', (e) => selectDifficulty("easy", e.target));
 mediumBtn.addEventListener('click', (e) => selectDifficulty("medium", e.target));
 hardBtn.addEventListener('click', (e) => selectDifficulty("hard", e.target));
-
-// edits: 
-// Change cursor to a hammer
-// clean up code and comments
